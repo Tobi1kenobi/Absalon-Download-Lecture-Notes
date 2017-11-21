@@ -33,12 +33,22 @@ print("Please provide your absalon password:")
 absalon_password = input()
 absalon_url = "https://intranet.ku.dk/CookieAuth.dll?GetLogon?curl=Z2F&reason=0&formdir=7"
 absalon_login = {'username': absalon_password,
-                 'password': absalon_username}
+                 'password': absalon_username,
+                 'flags':'0',
+                 'forcedownlevel':'0',
+                 'formdir':'7',
+                 'rdoPblc':'0',
+                 'rdoPrvt':'0',
+                 'curl':'Z2F',
+                 '_form_action': 'Save'
+                 }
 
 posted_request = session.post(absalon_url,absalon_login)
 print("New URL: ", posted_request.url)
 print("Status Code: ", posted_request.status_code)
 print("History: ", posted_request.history)
+print(posted_request.headers)
+print(posted_request.content)
 
 #Attempt to access a logged-in page
 r = session.get('https://absalon.ku.dk/profile')
