@@ -23,32 +23,24 @@ except ImportError:
     importcheck()
 
 #Attempt to login to Absalon/KU intranet
-import requests
-import sys
+from selenium import webdriver
+from selenium.webdriver.common.keys import Keys
 
-session = requests.Session()
+
+absalon_url = "https://absalon.ku.dk"
 print("Please provide your absalon username:")
 absalon_username = input()
-print("Please provide your absalon password:")
+print("Please provide your absalon password")
 absalon_password = input()
-absalon_url = "https://intranet.ku.dk/CookieAuth.dll?GetLogon?curl=Z2F&reason=0&formdir=7"
-absalon_login = {'username': absalon_password,
-                 'password': absalon_username,
-                 'flags':'0',
-                 'forcedownlevel':'0',
-                 'formdir':'7',
-                 'rdoPblc':'0',
-                 'rdoPrvt':'0',
-                 'curl':'Z2F',
-                 '_form_action': 'Save'
-                 }
 
-posted_request = session.post(absalon_url,absalon_login)
-print("New URL: ", posted_request.url)
-print("Status Code: ", posted_request.status_code)
-print("History: ", posted_request.history)
-print(posted_request.headers)
-print(posted_request.content)
 
-#Attempt to access a logged-in page
-r = session.get('https://absalon.ku.dk/profile')
+driver = webdriver.Chrome()
+driver.get(absalon_url)
+login_elem = driver.find_element_by_name("username")
+login_elem.clear()
+login_elem.send_keys(absalon_username)
+password_elem = driver.find_element_by_name("password")
+password_elem.clear()
+password_elem.send_keys(absalon_password)
+password_elem.send_keys(Keys.RETURN)
+
