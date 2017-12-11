@@ -18,27 +18,49 @@ def importcheck():
 
 
 try:
-    import placeholdermodulename
+    pass
+    #import placeholdermodulename
 except ImportError:
     importcheck()
 
 #Attempt to login to Absalon/KU intranet
-import requests
-import sys
+from selenium import webdriver
+from selenium.webdriver.common.keys import Keys
 
-session = requests.Session()
+
+absalon_url = "https://absalon.ku.dk"
+stats_course_files_url = "https://absalon.ku.dk/courses/22297/files?"
 print("Please provide your absalon username:")
 absalon_username = input()
-print("Please provide your absalon password:")
+print("Please provide your absalon password")
 absalon_password = input()
-absalon_url = "https://intranet.ku.dk/CookieAuth.dll?GetLogon?curl=Z2F&reason=0&formdir=7"
-absalon_login = {'username': absalon_password,
-                 'password': absalon_username}
 
-posted_request = session.post(absalon_url,absalon_login)
-print("New URL: ", posted_request.url)
-print("Status Code: ", posted_request.status_code)
-print("History: ", posted_request.history)
+# Launch a Chrome browser, access the absalon URL
+options = webdriver.ChromeOptions()
+options.add_argument('--window-size=500,500')
+driver = webdriver.Chrome(chrome_options=options)
+#driver.set_window_size(10, 10)
+driver.get(absalon_url)
 
-#Attempt to access a logged-in page
-r = session.get('https://absalon.ku.dk/profile')
+#Login to Absalon with provided username and password
+login_elem = driver.find_element_by_name("username")
+login_elem.clear()
+login_elem.send_keys(absalon_username)
+password_elem = driver.find_element_by_name("password")
+password_elem.clear()
+password_elem.send_keys(absalon_password)
+password_elem.send_keys(Keys.RETURN)
+
+#Access a specific course url's files (in this example, Statistics for Bioinformatics and eScience)
+driver.get(stats_course_files_url)
+all_elements = driver.find_elements_by_class_name("ef-name-col__text")
+for element in all_elements:
+    print(element.text)
+
+#Check current working directory for presence of the files, if absent then downloads them to working directory
+#Might output the list to a file and so unwanted files aren't repeatedly downloaded
+
+
+
+#Finally close browser
+driver.close()
