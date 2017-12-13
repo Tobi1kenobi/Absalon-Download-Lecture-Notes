@@ -1,2 +1,6 @@
 *.xml
 *.iml
+usernamepass.py
+UserSpecific.py
+__pycache__/DownloadSlides.cpython-36.pyc
+geckodriver.log
