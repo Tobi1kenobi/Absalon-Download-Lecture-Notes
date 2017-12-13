@@ -19,7 +19,8 @@ def fetch_login_details(abs_username,abs_password,user_input = False):
 def launch_browser(download_directory,browser_choice = "Chrome"):
     """Launches a Chrome or Firefox browser using Selenium webdriver and sets"""
     if browser_choice == "Chrome":
-        DRIVER = webdriver.ChromeOptions()
+        DRIVER = webdriver.Chrome()
+        chromeOptions = webdriver.ChromeOptions()
         prefs = {"download.default_directory" : download_directory}
         chromeOptions.add_experimental_option("prefs",prefs)
     if browser_choice == "Firefox":
@@ -39,11 +40,12 @@ def access_absalon(driver,login):
     return driver
 
 #Access a specific course url's files (in this example, Statistics for Bioinformatics and eScience)
-def access_abs_files_url(driver,abs_course_number = "22297"):
+def access_abs_files_url(driver,download_dir,abs_course_number = "22297"):
     driver.get("https://absalon.ku.dk/courses/"+abs_course_number+"/files?")
     time.sleep(1)
     all_elements = driver.find_elements_by_class_name("ef-name-col__link")
     ACQUIRED_FILES = []
+    FILES_IN_DIRECTORY = os.listdir(download_dir)
     FILES_IN_DIRECTORY.append("course_image")
     for download_element in all_elements:
         if download_element.text in FILES_IN_DIRECTORY:
